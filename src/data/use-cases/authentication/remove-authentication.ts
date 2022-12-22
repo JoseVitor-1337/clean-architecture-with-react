@@ -1,4 +1,4 @@
-import { IHttpPostClient } from "data/protocols/http/http-post-clien";
+import { IHttpPostClient } from "data/protocols/http/http-post-client";
 
 export class RemoteAuthentication {
   constructor(
