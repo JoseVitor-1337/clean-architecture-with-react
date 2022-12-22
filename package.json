@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/JoseVitor-1337/clean-architecture-with-react/issues"
   },
-  "homepage": "https://github.com/JoseVitor-1337/clean-architecture-with-react#readme"
+  "homepage": "https://github.com/JoseVitor-1337/clean-architecture-with-react#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^4.4.0"
+  }
 }
