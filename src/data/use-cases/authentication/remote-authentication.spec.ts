@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "@data/protocols/http/http-response";
 import { HttpPostClientSpy } from "@data/tests/mock-http-client";
 import { InvalidCredentialsError } from "@domain/erros/invalid-credentials-error";
+import { UnexpectedError } from "@domain/erros/unexpected-error";
 import { mockAuthentication } from "@domain/test/mock-authentication";
 import { RemoteAuthentication } from "./remove-authentication";
 
@@ -42,5 +43,32 @@ describe("RemoveAuthentication", () => {
     };
     const promise = sut.auth(authenticationParams);
     await expect(promise).rejects.toThrow(new InvalidCredentialsError());
+  });
+
+  test("Should throw UnexpectedError if HttpPostClient returns 400 statusCode", async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.badRequest,
+    };
+    const promise = sut.auth(authenticationParams);
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test("Should throw UnexpectedError if HttpPostClient returns 500 statusCode", async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.serverError,
+    };
+    const promise = sut.auth(authenticationParams);
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test("Should throw UnexpectedError if HttpPostClient returns 494 statusCode", async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.notFound,
+    };
+    const promise = sut.auth(authenticationParams);
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 });
