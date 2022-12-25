@@ -14,18 +14,22 @@ const mockPostRequest = (): HttpPostParams<any> => {
 
 describe("AxiosHttpClient", () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
+  const mockedAxiosResult = {
+    data: { randow: "" },
+    status: 1,
+  };
+  mockedAxios.post.mockResolvedValue(mockedAxiosResult);
+  const postRequest = mockPostRequest();
 
   test("Should call axios with correct URL and verb", async () => {
-    const postRequest = mockPostRequest();
     const sut = makeSut();
     await sut.post(postRequest);
     expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url, postRequest.body);
   });
 
-  test("Should call axios with correct URL and verb", async () => {
-    const postRequest = mockPostRequest();
+  test("Should return the correct statusCode and body", async () => {
     const sut = makeSut();
-    await sut.post(postRequest);
-    expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url, postRequest.body);
+    const httpResponse = await sut.post(postRequest);
+    expect(httpResponse).toEqual({ statusCode: mockedAxiosResult.status, body: mockedAxiosResult.data });
   });
 });
