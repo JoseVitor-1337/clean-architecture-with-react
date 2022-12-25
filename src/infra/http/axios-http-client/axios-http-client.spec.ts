@@ -21,4 +21,11 @@ describe("AxiosHttpClient", () => {
     await sut.post(postRequest);
     expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url, postRequest.body);
   });
+
+  test("Should call axios with correct URL and verb", async () => {
+    const postRequest = mockPostRequest();
+    const sut = makeSut();
+    await sut.post(postRequest);
+    expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url, postRequest.body);
+  });
 });
