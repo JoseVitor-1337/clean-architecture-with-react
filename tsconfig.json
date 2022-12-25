@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES6",
     "esModuleInterop": true,
     "lib": ["dom", "dom.Iterable", "esnext"],
     "module": "esnext",
@@ -14,14 +14,10 @@
       "@infra/*": ["infra/*"]
     },
     "allowJs": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
     "strict": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "noEmit": true
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
