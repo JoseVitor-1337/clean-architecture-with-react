@@ -2,16 +2,21 @@ import { HttpStatusCode } from "@data/protocols/http/http-response";
 import { HttpPostClientSpy } from "@data/tests/mock-http-client";
 import { InvalidCredentialsError } from "@domain/erros/invalid-credentials-error";
 import { UnexpectedError } from "@domain/erros/unexpected-error";
+import { AccountModel } from "@domain/models/account-model";
 import { mockAuthentication } from "@domain/test/mock-authentication";
+import { AuthenticationParams } from "@domain/use-cases/authentication";
 import { RemoteAuthentication } from "./remove-authentication";
 
 type SutTypes = {
   sut: RemoteAuthentication;
-  httpPostClientSpy: HttpPostClientSpy;
+  httpPostClientSpy: HttpPostClientSpy<AuthenticationParams, AccountModel>;
 };
 
 const makeSut = (url = "another_url"): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy();
+  const httpPostClientSpy = new HttpPostClientSpy<
+    AuthenticationParams,
+    AccountModel
+  >();
   const sut = new RemoteAuthentication(url, httpPostClientSpy);
 
   return {
