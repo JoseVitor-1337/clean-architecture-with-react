@@ -1,13 +1,9 @@
-import { HttpStatusCode } from "@data/protocols/http/http-response";
-import { HttpPostClientSpy } from "@data/tests/mock-http-client";
-import { InvalidCredentialsError } from "@domain/erros/invalid-credentials-error";
-import { UnexpectedError } from "@domain/erros/unexpected-error";
-import { AccountModel } from "@domain/models/account-model";
-import {
-  mockAccountModel,
-  mockAuthentication,
-} from "@domain/test/mock-account";
-import { AuthenticationParams } from "@domain/use-cases/authentication";
+import { HttpStatusCode } from "@data/protocols/http";
+import { HttpPostClientSpy } from "@data/tests";
+import { InvalidCredentialsError, UnexpectedError } from "@domain/erros";
+import { AccountModel } from "@domain/models";
+import { mockAccountModel, mockAuthentication } from "@domain/test";
+import { AuthenticationParams } from "@domain/use-cases";
 import { RemoteAuthentication } from "./remove-authentication";
 
 type SutTypes = {
