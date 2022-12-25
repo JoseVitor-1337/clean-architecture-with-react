@@ -5,13 +5,7 @@ import { AccountModel } from "@domain/models";
 import { Authentication, AuthenticationParams } from "@domain/use-cases";
 
 export class RemoteAuthentication implements Authentication {
-  constructor(
-    private readonly url: string,
-    private readonly httpPostClient: IHttpPostClient<
-      AuthenticationParams,
-      AccountModel
-    >
-  ) {}
+  constructor(private readonly url: string, private readonly httpPostClient: IHttpPostClient<AuthenticationParams, AccountModel>) {}
 
   async auth(params: AuthenticationParams): Promise<AccountModel> {
     const httpResponse = await this.httpPostClient.post({
