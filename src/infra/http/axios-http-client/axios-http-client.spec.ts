@@ -3,12 +3,16 @@ import axios from "axios";
 
 jest.mock("axios");
 
+const makeSut = (): AxiosHttpClient => {
+  return new AxiosHttpClient();
+};
+
 describe("AxiosHttpClient", () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
 
   test("Should call axios with correct URL", async () => {
     const url = "anyUrl";
-    const sut = new AxiosHttpClient();
+    const sut = makeSut();
     await sut.post({ url });
     expect(mockedAxios).toHaveBeenCalledWith(url);
   });
