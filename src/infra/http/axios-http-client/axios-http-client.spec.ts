@@ -15,11 +15,10 @@ const mockPostRequest = (): HttpPostParams<any> => {
 describe("AxiosHttpClient", () => {
   const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-  const postRequest = mockPostRequest();
-
   test("Should call axios with correct URL and verb", async () => {
+    const postRequest = mockPostRequest();
     const sut = makeSut();
     await sut.post(postRequest);
-    expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url);
+    expect(mockedAxios.post).toHaveBeenCalledWith(postRequest.url, postRequest.body);
   });
 });
