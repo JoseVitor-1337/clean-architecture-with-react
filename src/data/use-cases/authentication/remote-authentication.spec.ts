@@ -3,7 +3,10 @@ import { HttpPostClientSpy } from "@data/tests/mock-http-client";
 import { InvalidCredentialsError } from "@domain/erros/invalid-credentials-error";
 import { UnexpectedError } from "@domain/erros/unexpected-error";
 import { AccountModel } from "@domain/models/account-model";
-import { mockAuthentication } from "@domain/test/mock-authentication";
+import {
+  mockAccountModel,
+  mockAuthentication,
+} from "@domain/test/mock-account";
 import { AuthenticationParams } from "@domain/use-cases/authentication";
 import { RemoteAuthentication } from "./remove-authentication";
 
@@ -27,6 +30,7 @@ const makeSut = (url = "another_url"): SutTypes => {
 
 describe("RemoveAuthentication", () => {
   const authenticationParams = mockAuthentication();
+  const accountModel = mockAccountModel();
 
   test("Should call HttpPostClient with correct URL", async () => {
     const url = "other url";
@@ -75,5 +79,15 @@ describe("RemoveAuthentication", () => {
     };
     const promise = sut.auth(authenticationParams);
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test("Should return an AccountModel if HttpPost client returns 200 statusCode", async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: accountModel,
+    };
+    const account = await sut.auth(authenticationParams);
+    expect(account).toEqual(accountModel);
   });
 });
