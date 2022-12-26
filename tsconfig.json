@@ -9,10 +9,12 @@
     "rootDir": "src",
     "baseUrl": "src",
     "paths": {
+      "@assets/*": ["assets/*"],
       "@data/*": ["data/*"],
       "@domain/*": ["domain/*"],
       "@infra/*": ["infra/*"],
-      "@main/*": ["main/*"]
+      "@main/*": ["main/*"],
+      "@presentation/*": ["presentation/*"]
     },
     "allowJs": true,
     "strict": false,
