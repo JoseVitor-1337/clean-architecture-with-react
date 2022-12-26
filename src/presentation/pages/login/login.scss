@@ -1,0 +1,140 @@
+@import "../../styles/colors.scss";
+
+* {
+  font-family: "Roboto", sans-serif;
+  font-size: 14;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+}
+
+input {
+  border: 1px solid $primaryLight;
+  line-height: 40px;
+  border-radius: 4px;
+  padding: 0px 40px 0 8px;
+  outline-width: 0px;
+  outline-color: $primaryLight;
+
+  transition: all 250ms;
+
+  &:focus {
+    outline-width: 1px;
+  }
+}
+
+button {
+  background-color: $primary;
+  color: $white;
+  line-height: 50px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 250ms;
+
+  &:hover {
+    background-color: $primaryLight;
+  }
+}
+
+.login {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .header {
+    background-color: $primary;
+    border-top: 20px solid$primaryDark;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      margin-top: 20px;
+    }
+
+    h1 {
+      margin: 16px 0px 20px;
+      color: $white;
+    }
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    background-color: $white;
+    padding: 40px;
+    border-radius: 8px;
+    align-self: center;
+    box-shadow: 0px 1px 3px -1px $black;
+
+    h2 {
+      color: $primaryDark;
+      text-align: center;
+      font-size: 20px;
+      text-transform: uppercase;
+    }
+
+    .inputWrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-top: 16px;
+
+      input {
+        flex-grow: 1;
+      }
+
+      .inputStatus {
+        position: absolute;
+        right: 8px;
+        font-size: 12px;
+        cursor: help;
+      }
+    }
+
+    .submit {
+      margin-top: 16px;
+    }
+
+    .link {
+      text-align: center;
+      color: $primary;
+      text-transform: capitalize;
+      margin-top: 8px;
+
+      cursor: pointer;
+      transition: all 250ms;
+
+      &:hover {
+        color: $primaryLight;
+      }
+    }
+
+    .errorWrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .spinner {
+        margin-top: 16px;
+      }
+
+      .error {
+        margin-top: 16px;
+        color: $primaryLight;
+      }
+    }
+  }
+  .footer {
+    height: 48px;
+    background-color: $primary;
+  }
+}
