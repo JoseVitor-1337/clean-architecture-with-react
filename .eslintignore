@@ -3,4 +3,5 @@ yarn.lock
 public
 
 # All javascript files
-**/*.js
+*.js
+*.scss
