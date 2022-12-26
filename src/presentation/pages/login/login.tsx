@@ -1,14 +1,14 @@
 import React from "react";
 import Styles from "./login.scss";
 
-import LogoSVG from "@assets/images/logo.svg";
 import { Spinner } from "@presentation/components/spinner/spinner";
+import { Logo } from "@presentation/components/logo/logo";
 
 export const Login: React.FC = () => {
   return (
     <div className={Styles.login}>
       <header className={Styles.header}>
-        <img src={LogoSVG} alt="Logo 4Dev" />
+        <Logo />
         <h1>4Dev - Enquetes para programadores</h1>
       </header>
 
