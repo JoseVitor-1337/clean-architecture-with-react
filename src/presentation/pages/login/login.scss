@@ -1,32 +1,5 @@
 @import "../../styles/colors.scss";
 
-* {
-  font-family: "Roboto", sans-serif;
-  font-size: 14;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: $background;
-}
-
-button {
-  background-color: $primary;
-  color: $white;
-  line-height: 50px;
-  border-radius: 8px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  transition: all 250ms;
-
-  &:hover {
-    background-color: $primaryLight;
-  }
-}
-
 .login {
   height: 100vh;
 
