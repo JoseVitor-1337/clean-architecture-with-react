@@ -1,0 +1,31 @@
+@import "../../styles/colors.scss";
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+
+  input {
+    flex-grow: 1;
+    border: 1px solid $primaryLight;
+    line-height: 40px;
+    border-radius: 4px;
+    padding: 0px 40px 0 8px;
+    outline-width: 0px;
+    outline-color: $primaryLight;
+
+    transition: all 250ms;
+
+    &:focus {
+      outline-width: 1px;
+    }
+  }
+
+  .inputStatus {
+    position: absolute;
+    right: 8px;
+    font-size: 12px;
+    cursor: help;
+  }
+}

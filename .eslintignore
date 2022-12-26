@@ -5,3 +5,4 @@ public
 # All javascript files
 *.js
 *.scss
+*.svg

@@ -9,7 +9,7 @@ module.exports = {
   transform: {
     ".*\\.(ts|tsx)$": "ts-jest",
   },
-  modulePathIgnorePatterns: ["<rootDir>/src/**/*.scss"],
+
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: "<rootDir>/src/",
   }),
