@@ -11,7 +11,8 @@
     "paths": {
       "@data/*": ["data/*"],
       "@domain/*": ["domain/*"],
-      "@infra/*": ["infra/*"]
+      "@infra/*": ["infra/*"],
+      "@main/*": ["main/*"]
     },
     "allowJs": true,
     "strict": false,
