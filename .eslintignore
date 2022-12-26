@@ -1,5 +1,6 @@
 node_modules
-jest.config.js
-webpack.config.js
 yarn.lock
 public
+
+# All javascript files
+**/*.js
