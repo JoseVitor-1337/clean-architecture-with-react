@@ -16,6 +16,8 @@ module.exports = {
       "@domain": path.join(__dirname, "src", "domain"),
       "@infra": path.join(__dirname, "src", "ingra"),
       "@main": path.join(__dirname, "src", "main"),
+      "@presentation": path.join(__dirname, "src", "presentation"),
+      "@assets": path.join(__dirname, "src", "assets"),
     },
   },
   module: {
@@ -29,10 +31,23 @@ module.exports = {
         test: /\.scss$/,
         use: [{ loader: "style-loader" }, { loader: "css-loader", options: { modules: true } }, { loader: "sass-loader" }],
       },
+      {
+        test: /\.(png|jpg|gif|svg)$/i,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 8192,
+            },
+          },
+        ],
+      },
     ],
   },
   devServer: {
-    contentBase: "./public",
+    static: {
+      directory: path.join(__dirname, "./public"),
+    },
     devMiddleware: {
       writeToDisk: true,
     },
@@ -42,5 +57,5 @@ module.exports = {
     react: "React",
     "react-dom": "ReactDOM",
   },
-  plugin: [new CleanWebpackPlugin()],
+  plugins: [new CleanWebpackPlugin()],
 };
