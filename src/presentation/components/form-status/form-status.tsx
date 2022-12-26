@@ -1,10 +1,10 @@
-import React, { memo } from "react";
+import React from "react";
 
 import { Spinner } from "@presentation/components/spinner/spinner";
 
 import Styles from "./form-status.scss";
 
-const FormStatus: React.FC = () => {
+export const FormStatus: React.FC = () => {
   return (
     <div className={Styles.errorWrap}>
       <Spinner className={Styles.spinner} />
@@ -12,5 +12,3 @@ const FormStatus: React.FC = () => {
     </div>
   );
 };
-
-export default memo(FormStatus);
