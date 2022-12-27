@@ -19,6 +19,8 @@
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
     "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "off",
     "indent": ["error", 2],
     "no-return-await": "error",
     "linebreak-style": ["error", "windows"],
