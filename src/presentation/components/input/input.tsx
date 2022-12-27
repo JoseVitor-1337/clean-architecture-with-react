@@ -6,14 +6,10 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
 }
 
-export const Input: React.FC<Props> = ({ title, ...rest }) => {
-  function enableInput(event: React.FocusEvent<HTMLInputElement>): void {
-    event.target.readOnly = false;
-  }
-
+export const Input: React.FC<Props> = ({ title, onChange, ...rest }) => {
   return (
     <div className={Styles.inputWrap}>
-      <input readOnly onFocus={enableInput} {...rest} />
+      <input onChange={onChange} {...rest} />
       <span title={title} className={Styles.inputStatus}>
         🔴
       </span>
