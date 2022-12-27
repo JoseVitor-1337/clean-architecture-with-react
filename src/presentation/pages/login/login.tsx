@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Styles from "./login.scss";
 
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
 
 export const Login: React.FC = () => {
+  const [isLoading] = useState<boolean>(false);
+  const [errorMessage] = useState<string | undefined>();
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
@@ -18,7 +21,7 @@ export const Login: React.FC = () => {
           Entrar
         </button>
         <span className={Styles.link}>Criar conta</span>
-        <FormStatus />
+        <FormStatus isLoading={isLoading} errorMessage={errorMessage} />
       </form>
 
       <Footer />
