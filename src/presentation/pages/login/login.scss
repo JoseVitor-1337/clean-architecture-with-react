@@ -44,6 +44,16 @@
 
     .submit {
       margin-top: 16px;
+
+      &:disabled {
+        cursor: not-allowed;
+        background-color: $disabledBackground;
+        color: $disabledColor;
+
+        &:hover {
+          background-color: $disabledBackground;
+        }
+      }
     }
 
     .link {
