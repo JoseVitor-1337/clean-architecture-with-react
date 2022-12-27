@@ -63,4 +63,14 @@ describe("Login Component", () => {
     expect(emailStatus.title).toBe(validationSpy.errorMessage);
     expect(emailStatus).toHaveTextContent("🔴");
   });
+
+  test("Should show password error on title if validaion fails", () => {
+    const { validationSpy } = makeLoginFactory();
+    validationSpy.errorMessage = "anyError";
+    const passwordInput = screen.getByTestId("login-password");
+    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
+    const passwordStatus = screen.getByTestId("login-password-status");
+    expect(passwordStatus.title).toBe(validationSpy.errorMessage);
+    expect(passwordStatus).toHaveTextContent("🔴");
+  });
 });
