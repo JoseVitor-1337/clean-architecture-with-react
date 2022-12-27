@@ -36,6 +36,10 @@ export const Login: React.FC<Props> = ({ validation }) => {
     validation.validate({ email: inputs.email });
   }, [inputs.email]);
 
+  useEffect(() => {
+    validation.validate({ password: inputs.password });
+  }, [inputs.password]);
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
