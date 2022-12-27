@@ -74,6 +74,16 @@ describe("Login Component", () => {
     expect(passwordStatus).toHaveTextContent("🔴");
   });
 
+  test("Should show valid email state if Validation succeeds", () => {
+    const { validationSpy } = makeLoginFactory();
+    validationSpy.errorMessage = "";
+    const emailInput = screen.getByTestId("login-email");
+    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    const emailStatus = screen.getByTestId("login-email-status");
+    expect(emailStatus.title).toBe("Tudo certo!");
+    expect(emailStatus).toHaveTextContent("🟢");
+  });
+
   test("Should show valid password state if Validation succeeds", () => {
     const { validationSpy } = makeLoginFactory();
     validationSpy.errorMessage = "";
