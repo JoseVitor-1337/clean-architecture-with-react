@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Validation } from "@presentation/protocols/validation";
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
@@ -32,16 +32,18 @@ export const Login: React.FC<Props> = ({ validation }) => {
     setInputs({ ...inputs, [name]: value });
   }
 
-  useEffect(() => {
+  const handleValidateInputs = useCallback((field: string, value: string) => {
     setInputErrors((oldInputErrors) => {
-      return { ...oldInputErrors, email: validation.validate("email", inputs.email) };
+      return { ...oldInputErrors, [field]: validation.validate(field, value) };
     });
+  }, []);
+
+  useEffect(() => {
+    handleValidateInputs("email", inputs.email);
   }, [inputs.email]);
 
   useEffect(() => {
-    setInputErrors((oldInputErrors) => {
-      return { ...oldInputErrors, password: validation.validate("password", inputs.password) };
-    });
+    handleValidateInputs("password", inputs.password);
   }, [inputs.password]);
 
   return (
