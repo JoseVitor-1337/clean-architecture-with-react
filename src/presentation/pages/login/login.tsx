@@ -21,9 +21,9 @@ export const Login: React.FC<Props> = ({ validation }) => {
     email: "",
     password: "",
   });
-  const [inputErrors] = useState<InputErrors>({
-    email: "Campo obrigatório",
-    password: "Campo obrigatório",
+  const [inputErrors, setInputErrors] = useState<InputErrors>({
+    email: "",
+    password: "",
   });
 
   function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -33,11 +33,15 @@ export const Login: React.FC<Props> = ({ validation }) => {
   }
 
   useEffect(() => {
-    validation.validate("email", inputs.email);
+    setInputErrors((oldInputErrors) => {
+      return { ...oldInputErrors, email: validation.validate("email", inputs.email) };
+    });
   }, [inputs.email]);
 
   useEffect(() => {
-    validation.validate("password", inputs.password);
+    setInputErrors((oldInputErrors) => {
+      return { ...oldInputErrors, password: validation.validate("password", inputs.password) };
+    });
   }, [inputs.password]);
 
   return (
