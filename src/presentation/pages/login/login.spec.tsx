@@ -48,10 +48,17 @@ describe("Login Component", () => {
     inputErrorSpans.forEach((errorSpan) => expect(errorSpan).toHaveTextContent("🔴"));
   });
 
-  test("Should call Validation with correct email value", () => {
+  test("Should call Validation with correct email", () => {
     const { validationSpy } = makeLoginFactory();
     const emailInput = screen.getByTestId("login-email");
     fireEvent.input(emailInput, { target: { value: "anyEmail" } });
     expect(validationSpy.input).toEqual({ email: "anyEmail" });
+  });
+
+  test("Should call Validation with correct password", () => {
+    const { validationSpy } = makeLoginFactory();
+    const passwordInput = screen.getByTestId("login-password");
+    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
+    expect(validationSpy.input).toEqual({ password: "anyPassword" });
   });
 });
