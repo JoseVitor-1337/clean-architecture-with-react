@@ -15,4 +15,11 @@ describe("Login Component", () => {
     const submitButton = screen.getByTestId("submit");
     expect(submitButton).toBeDisabled();
   });
+
+  test("Should email and password inputs start with error spans on initial state", () => {
+    render(<Login />);
+    const inputErrorSpans = screen.queryAllByTitle("Campo obrigatório");
+    expect(inputErrorSpans.length).toBe(2);
+    inputErrorSpans.forEach((errorSpan) => expect(errorSpan).toHaveTextContent("🔴"));
+  });
 });
