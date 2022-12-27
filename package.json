@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/JoseVitor-1337/clean-architecture-with-react#readme",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/axios": "^0.14.0",
     "@types/jest": "^29.2.4",

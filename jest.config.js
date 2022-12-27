@@ -3,6 +3,7 @@ const { compilerOptions } = require("./tsconfig.json");
 
 module.exports = {
   roots: ["<rootDir>/src"],
+  setupFilesAfterEnv: ["<rootDir>/jest-setup.ts"],
   collectCoverageFrom: ["<rootDir>/src/**/*.{ts, tsx}", "!**/*.d.ts"],
   coverageDirectory: "coverage",
   testEnvironment: "jsdom",
