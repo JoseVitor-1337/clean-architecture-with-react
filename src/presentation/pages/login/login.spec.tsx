@@ -8,8 +8,9 @@ type MakeLoginFactoryReturn = {
   validationSpy: ValidationSpy;
 };
 
-const makeLoginFactory = (): MakeLoginFactoryReturn => {
+const makeLoginFactory = (errorMessage?: string): MakeLoginFactoryReturn => {
   const validationSpy = new ValidationSpy();
+  validationSpy.errorMessage = errorMessage;
   render(<Login validation={validationSpy} />);
 
   return { validationSpy };
@@ -31,8 +32,8 @@ describe("Login Component", () => {
   });
 
   test("Should email and password inputs start with error spans on initial state", () => {
-    makeLoginFactory();
-    const inputErrorSpans = screen.queryAllByTitle("Campo obrigatório");
+    const { validationSpy } = makeLoginFactory("Campo obrigatório");
+    const inputErrorSpans = screen.queryAllByTitle(validationSpy.errorMessage);
     expect(inputErrorSpans.length).toBe(2);
     inputErrorSpans.forEach((errorSpan) => expect(errorSpan).toHaveTextContent("🔴"));
   });
@@ -51,5 +52,15 @@ describe("Login Component", () => {
     fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
     expect(validationSpy.fieldName).toEqual("password");
     expect(validationSpy.fieldValue).toEqual("anyPassword");
+  });
+
+  test("Should show email error on title if validaion fails", () => {
+    const { validationSpy } = makeLoginFactory();
+    validationSpy.errorMessage = "anyError";
+    const emailInput = screen.getByTestId("login-email");
+    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    const emailStatus = screen.getByTestId("login-email-status");
+    expect(emailStatus.title).toBe(validationSpy.errorMessage);
+    expect(emailStatus).toHaveTextContent("🔴");
   });
 });
