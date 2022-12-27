@@ -7,10 +7,12 @@ import { Login } from "./login";
 
 class ValidationSpy implements Validation {
   errorMessage: string;
-  input: object;
+  fieldName: string;
+  fieldValue: string;
 
-  validate(input: object): string {
-    this.input = input;
+  validate(fieldName: string, fieldValue: string): string {
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
     return this.errorMessage;
   }
 }
@@ -52,13 +54,15 @@ describe("Login Component", () => {
     const { validationSpy } = makeLoginFactory();
     const emailInput = screen.getByTestId("login-email");
     fireEvent.input(emailInput, { target: { value: "anyEmail" } });
-    expect(validationSpy.input).toEqual({ email: "anyEmail" });
+    expect(validationSpy.fieldName).toEqual("email");
+    expect(validationSpy.fieldValue).toEqual("anyEmail");
   });
 
   test("Should call Validation with correct password", () => {
     const { validationSpy } = makeLoginFactory();
     const passwordInput = screen.getByTestId("login-password");
     fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
-    expect(validationSpy.input).toEqual({ password: "anyPassword" });
+    expect(validationSpy.fieldName).toEqual("password");
+    expect(validationSpy.fieldValue).toEqual("anyPassword");
   });
 });

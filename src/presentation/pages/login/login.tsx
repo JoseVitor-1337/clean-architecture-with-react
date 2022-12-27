@@ -33,11 +33,11 @@ export const Login: React.FC<Props> = ({ validation }) => {
   }
 
   useEffect(() => {
-    validation.validate({ email: inputs.email });
+    validation.validate("email", inputs.email);
   }, [inputs.email]);
 
   useEffect(() => {
-    validation.validate({ password: inputs.password });
+    validation.validate("password", inputs.password);
   }, [inputs.password]);
 
   return (
