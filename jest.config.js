@@ -1,5 +1,5 @@
 const { pathsToModuleNameMapper } = require("ts-jest");
-const { compilerOptions } = require("./tsconfig");
+const { compilerOptions } = require("./tsconfig.json");
 
 module.exports = {
   roots: ["<rootDir>/src"],
@@ -8,9 +8,11 @@ module.exports = {
   testEnvironment: "jsdom",
   transform: {
     ".*\\.(ts|tsx)$": "ts-jest",
+    ".+\\.(css|styl|less|sass|scss)$": "jest-css-modules-transform",
+    ".+\\.(css|scss|png|jpg|svg)$": "jest-transform-stub",
   },
 
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: "<rootDir>/src/",
+    prefix: "<rootDir>/src",
   }),
 };

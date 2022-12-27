@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/JoseVitor-1337/clean-architecture-with-react#readme",
   "devDependencies": {
+    "@testing-library/react": "^13.4.0",
     "@types/axios": "^0.14.0",
     "@types/jest": "^29.2.4",
     "@types/node": "^18.11.17",
@@ -41,7 +42,9 @@
     "git-commit-msg-linter": "^4.4.0",
     "husky": "^8.0.0",
     "jest": "^29.3.1",
+    "jest-css-modules-transform": "^4.4.2",
     "jest-environment-jsdom": "^29.3.1",
+    "jest-transform-stub": "^2.0.0",
     "lint-staged": "^13.1.0",
     "node-sass": "^8.0.0",
     "sass-loader": "^13.2.0",
