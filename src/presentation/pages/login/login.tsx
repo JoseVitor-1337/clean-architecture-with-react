@@ -40,6 +40,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
 
   async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
     try {
       await authentication.auth(inputs);
