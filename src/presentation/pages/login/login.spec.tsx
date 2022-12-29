@@ -8,7 +8,7 @@ type MakeLoginFactoryReturn = {
   validationSpy: ValidationSpy;
 };
 
-const makeLoginFactory = (errorMessage?: string): MakeLoginFactoryReturn => {
+const makeLoginFactory = (errorMessage = ""): MakeLoginFactoryReturn => {
   const validationSpy = new ValidationSpy();
   validationSpy.errorMessage = errorMessage;
   render(<Login validation={validationSpy} />);
@@ -26,7 +26,7 @@ describe("Login Component", () => {
   });
 
   test("Should submit button is disable on initial state", () => {
-    makeLoginFactory();
+    makeLoginFactory("Campo obrigatório");
     const submitButton = screen.getByTestId("submit");
     expect(submitButton).toBeDisabled();
   });
@@ -75,8 +75,7 @@ describe("Login Component", () => {
   });
 
   test("Should show valid email state if Validation succeeds", () => {
-    const { validationSpy } = makeLoginFactory();
-    validationSpy.errorMessage = "";
+    makeLoginFactory();
     const emailInput = screen.getByTestId("login-email");
     fireEvent.input(emailInput, { target: { value: "anyEmail" } });
     const emailStatus = screen.getByTestId("login-email-status");
@@ -85,12 +84,21 @@ describe("Login Component", () => {
   });
 
   test("Should show valid password state if Validation succeeds", () => {
-    const { validationSpy } = makeLoginFactory();
-    validationSpy.errorMessage = "";
+    makeLoginFactory();
     const passwordInput = screen.getByTestId("login-password");
     fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
     const passwordStatus = screen.getByTestId("login-password-status");
     expect(passwordStatus.title).toBe("Tudo certo!");
     expect(passwordStatus).toHaveTextContent("🟢");
+  });
+
+  test("Should enable submit button is form is valid", () => {
+    makeLoginFactory();
+    const passwordInput = screen.getByTestId("login-password");
+    const emailInput = screen.getByTestId("login-email");
+    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
+    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    const submitButton = screen.getByTestId("submit");
+    expect(submitButton).toBeEnabled();
   });
 });
