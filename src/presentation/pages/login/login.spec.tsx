@@ -128,4 +128,11 @@ describe("Login Component", () => {
       password,
     });
   });
+
+  test("Should call Authentication only once", () => {
+    const { authenticationSpy } = makeLoginFactory();
+    simulateValidSubmit();
+    simulateValidSubmit();
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
 });
