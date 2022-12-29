@@ -135,4 +135,12 @@ describe("Login Component", () => {
     simulateValidSubmit();
     expect(authenticationSpy.callsCount).toBe(1);
   });
+
+  test("Should not call Authentication if form is valid", () => {
+    const { authenticationSpy } = makeLoginFactory("Error");
+    populateEmailField("anyEmail");
+    const form = screen.getByTestId("login-form");
+    fireEvent.submit(form);
+    expect(authenticationSpy.callsCount).toBe(0);
+  });
 });
