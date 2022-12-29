@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const Login: React.FC<Props> = ({ validation }) => {
-  const [isLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage] = useState<string | undefined>();
   const [inputs, setInputs] = useState({
     email: "",
@@ -41,6 +41,11 @@ export const Login: React.FC<Props> = ({ validation }) => {
     });
   }, []);
 
+  function handleSubmit(event: React.FormEvent): void {
+    event.preventDefault();
+    setIsLoading(true);
+  }
+
   useEffect(() => {
     handleValidateInputs("email", inputs.email);
   }, [inputs.email]);
@@ -53,7 +58,7 @@ export const Login: React.FC<Props> = ({ validation }) => {
     <div className={Styles.login}>
       <LoginHeader />
 
-      <form className={Styles.form}>
+      <form className={Styles.form} onSubmit={handleSubmit}>
         <h2>Login</h2>
 
         <Input
