@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Validation } from "@presentation/protocols/validation";
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
@@ -22,13 +22,16 @@ export const Login: React.FC<Props> = ({ validation }) => {
     password: "",
   });
   const [inputErrors, setInputErrors] = useState<InputErrors>({
-    email: "",
-    password: "",
+    email: "Campo obrigatório",
+    password: "Campo obrigatório",
   });
+
+  const isSubmitButtonDisabled = useMemo(() => {
+    return inputErrors.email !== "" || inputErrors.password !== "";
+  }, [inputErrors]);
 
   function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-
     setInputs({ ...inputs, [name]: value });
   }
 
@@ -72,7 +75,7 @@ export const Login: React.FC<Props> = ({ validation }) => {
           title={inputErrors.password}
         />
 
-        <button data-testid="submit" disabled className={Styles.submit} type="submit">
+        <button data-testid="submit" disabled={isSubmitButtonDisabled} className={Styles.submit} type="submit">
           Entrar
         </button>
         <span className={Styles.link}>Criar conta</span>
