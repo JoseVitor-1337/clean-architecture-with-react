@@ -18,6 +18,29 @@ const makeLoginFactory = (errorMessage = ""): MakeLoginFactoryReturn => {
   return { validationSpy, authenticationSpy };
 };
 
+const populateEmailField = (email = ""): void => {
+  const emailInput = screen.getByTestId("login-email");
+  fireEvent.input(emailInput, { target: { value: email } });
+};
+
+const populatePasswordField = (password = ""): void => {
+  const passwordInput = screen.getByTestId("login-password");
+  fireEvent.input(passwordInput, { target: { value: password } });
+};
+
+const simulataFormStatusForField = (fieldName: string, validationError?: string): void => {
+  const passwordStatus = screen.getByTestId(fieldName);
+  expect(passwordStatus.title).toBe(validationError || "Tudo certo!");
+  expect(passwordStatus).toHaveTextContent(validationError ? "🔴" : "🟢");
+};
+
+const simulateValidSubmit = (email = "", password = ""): void => {
+  populateEmailField(email);
+  populatePasswordField(password);
+  const submitButton = screen.getByTestId("submit");
+  fireEvent.submit(submitButton);
+};
+
 describe("Login Component", () => {
   afterEach(cleanup);
 
@@ -42,16 +65,14 @@ describe("Login Component", () => {
 
   test("Should call Validation with correct email", () => {
     const { validationSpy } = makeLoginFactory();
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    populateEmailField("anyEmail");
     expect(validationSpy.fieldName).toEqual("email");
     expect(validationSpy.fieldValue).toEqual("anyEmail");
   });
 
   test("Should call Validation with correct password", () => {
     const { validationSpy } = makeLoginFactory();
-    const passwordInput = screen.getByTestId("login-password");
-    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
+    populatePasswordField("anyPassword");
     expect(validationSpy.fieldName).toEqual("password");
     expect(validationSpy.fieldValue).toEqual("anyPassword");
   });
@@ -59,59 +80,40 @@ describe("Login Component", () => {
   test("Should show email error on title if validaion fails", () => {
     const { validationSpy } = makeLoginFactory();
     validationSpy.errorMessage = "anyError";
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
-    const emailStatus = screen.getByTestId("login-email-status");
-    expect(emailStatus.title).toBe(validationSpy.errorMessage);
-    expect(emailStatus).toHaveTextContent("🔴");
+    populateEmailField("anyEmail");
+    simulataFormStatusForField("login-email-status", validationSpy.errorMessage);
   });
 
   test("Should show password error on title if validaion fails", () => {
     const { validationSpy } = makeLoginFactory();
     validationSpy.errorMessage = "anyError";
-    const passwordInput = screen.getByTestId("login-password");
-    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
-    const passwordStatus = screen.getByTestId("login-password-status");
-    expect(passwordStatus.title).toBe(validationSpy.errorMessage);
-    expect(passwordStatus).toHaveTextContent("🔴");
+    populatePasswordField("anyPassword");
+    simulataFormStatusForField("login-password-status", validationSpy.errorMessage);
   });
 
   test("Should show valid email state if Validation succeeds", () => {
     makeLoginFactory();
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
-    const emailStatus = screen.getByTestId("login-email-status");
-    expect(emailStatus.title).toBe("Tudo certo!");
-    expect(emailStatus).toHaveTextContent("🟢");
+    populateEmailField("anyEmail");
+    simulataFormStatusForField("login-email-status");
   });
 
   test("Should show valid password state if Validation succeeds", () => {
     makeLoginFactory();
-    const passwordInput = screen.getByTestId("login-password");
-    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
-    const passwordStatus = screen.getByTestId("login-password-status");
-    expect(passwordStatus.title).toBe("Tudo certo!");
-    expect(passwordStatus).toHaveTextContent("🟢");
+    populatePasswordField("anyPassword");
+    simulataFormStatusForField("login-password-status");
   });
 
   test("Should enable submit button if form is valid", () => {
     makeLoginFactory();
     const submitButton = screen.getByTestId("submit");
-    const passwordInput = screen.getByTestId("login-password");
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
-    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    populateEmailField("anyEmail");
+    populatePasswordField("anyPassword");
     expect(submitButton).toBeEnabled();
   });
 
   test("Should show Spinner after onSubmit", () => {
     makeLoginFactory();
-    const submitButton = screen.getByTestId("submit");
-    const passwordInput = screen.getByTestId("login-password");
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
-    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
-    fireEvent.submit(submitButton);
+    simulateValidSubmit();
     const spinner = screen.getByTestId("spinner");
     expect(spinner).toBeInTheDocument();
   });
@@ -120,12 +122,7 @@ describe("Login Component", () => {
     const { authenticationSpy } = makeLoginFactory();
     const email = "anyEmail";
     const password = "anyPassword";
-    const submitButton = screen.getByTestId("submit");
-    const passwordInput = screen.getByTestId("login-password");
-    const emailInput = screen.getByTestId("login-email");
-    fireEvent.input(emailInput, { target: { value: email } });
-    fireEvent.input(passwordInput, { target: { value: password } });
-    fireEvent.submit(submitButton);
+    simulateValidSubmit(email, password);
     expect(authenticationSpy.params).toEqual({
       email,
       password,
