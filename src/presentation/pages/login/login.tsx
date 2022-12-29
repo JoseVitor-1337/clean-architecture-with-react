@@ -23,7 +23,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
     password: "Campo obrigatório",
   });
 
-  const isSubmitButtonDisabled = useMemo(() => {
+  const isFormInvalid = useMemo(() => {
     return inputErrors.email !== "" || inputErrors.password !== "";
   }, [inputErrors]);
 
@@ -40,7 +40,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
 
   async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
-    if (isLoading) return;
+    if (isLoading || isFormInvalid) return;
     setIsLoading(true);
     try {
       await authentication.auth(inputs);
@@ -61,7 +61,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
     <div className={Styles.login}>
       <LoginHeader />
 
-      <form className={Styles.form} onSubmit={handleSubmit}>
+      <form data-testid="login-form" className={Styles.form} onSubmit={handleSubmit}>
         <h2>Login</h2>
 
         <Input
@@ -83,7 +83,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
           title={inputErrors.password}
         />
 
-        <button data-testid="submit" disabled={isSubmitButtonDisabled} className={Styles.submit} type="submit">
+        <button data-testid="submit" disabled={isFormInvalid} className={Styles.submit} type="submit">
           Entrar
         </button>
         <span className={Styles.link}>Criar conta</span>
