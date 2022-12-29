@@ -92,13 +92,25 @@ describe("Login Component", () => {
     expect(passwordStatus).toHaveTextContent("🟢");
   });
 
-  test("Should enable submit button is form is valid", () => {
+  test("Should enable submit button if form is valid", () => {
     makeLoginFactory();
+    const submitButton = screen.getByTestId("submit");
     const passwordInput = screen.getByTestId("login-password");
     const emailInput = screen.getByTestId("login-email");
     fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
     fireEvent.input(emailInput, { target: { value: "anyEmail" } });
-    const submitButton = screen.getByTestId("submit");
     expect(submitButton).toBeEnabled();
+  });
+
+  test("Should show Spinner after onSubmit", () => {
+    makeLoginFactory();
+    const submitButton = screen.getByTestId("submit");
+    const passwordInput = screen.getByTestId("login-password");
+    const emailInput = screen.getByTestId("login-email");
+    fireEvent.input(passwordInput, { target: { value: "anyPassword" } });
+    fireEvent.input(emailInput, { target: { value: "anyEmail" } });
+    fireEvent.submit(submitButton);
+    const spinner = screen.getByTestId("spinner");
+    expect(spinner).toBeInTheDocument();
   });
 });
