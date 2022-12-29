@@ -2,26 +2,23 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Validation } from "@presentation/protocols/validation";
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
+import { Authentication, AuthenticationParams } from "@domain/use-cases";
 
 import Styles from "./login.scss";
 
-type InputErrors = {
-  email: string;
-  password: string;
-};
-
 type Props = {
   validation: Validation;
+  authentication: Authentication;
 };
 
-export const Login: React.FC<Props> = ({ validation }) => {
+export const Login: React.FC<Props> = ({ validation, authentication }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage] = useState<string | undefined>();
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<AuthenticationParams>({
     email: "",
     password: "",
   });
-  const [inputErrors, setInputErrors] = useState<InputErrors>({
+  const [inputErrors, setInputErrors] = useState<AuthenticationParams>({
     email: "Campo obrigatório",
     password: "Campo obrigatório",
   });
@@ -41,9 +38,14 @@ export const Login: React.FC<Props> = ({ validation }) => {
     });
   }, []);
 
-  function handleSubmit(event: React.FormEvent): void {
+  async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
     setIsLoading(true);
+    try {
+      await authentication.auth(inputs);
+    } catch (error) {
+      console.log("Error", error);
+    }
   }
 
   useEffect(() => {
