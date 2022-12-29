@@ -1,21 +1,8 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-import { mockAccountModel } from "@domain/test";
-import { AccountModel } from "@domain/models";
-import { Authentication, AuthenticationParams } from "@domain/use-cases";
-import { ValidationSpy } from "@presentation/test";
+import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
 import { Login } from "./login";
-
-class AuthenticationSpy implements Authentication {
-  account = mockAccountModel();
-  params: AuthenticationParams;
-
-  auth(params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params;
-    throw Promise.resolve(this.account);
-  }
-}
 
 type MakeLoginFactoryReturn = {
   validationSpy: ValidationSpy;
