@@ -29,9 +29,9 @@ const populatePasswordField = (password = ""): void => {
 };
 
 const simulataFormStatusForField = (fieldName: string, validationError?: string): void => {
-  const passwordStatus = screen.getByTestId(fieldName);
-  expect(passwordStatus.title).toBe(validationError || "Tudo certo!");
-  expect(passwordStatus).toHaveTextContent(validationError ? "🔴" : "🟢");
+  const fieldStatus = screen.getByTestId(fieldName);
+  expect(fieldStatus.title).toBe(validationError || "Tudo certo!");
+  expect(fieldStatus).toHaveTextContent(validationError ? "🔴" : "🟢");
 };
 
 const simulateValidSubmit = (email = "", password = ""): void => {
