@@ -1,19 +1,34 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
+import { mockAccountModel } from "@domain/test";
+import { AccountModel } from "@domain/models";
+import { Authentication, AuthenticationParams } from "@domain/use-cases";
 import { ValidationSpy } from "@presentation/test";
 import { Login } from "./login";
 
+class AuthenticationSpy implements Authentication {
+  account = mockAccountModel();
+  params: AuthenticationParams;
+
+  auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params;
+    throw Promise.resolve(this.account);
+  }
+}
+
 type MakeLoginFactoryReturn = {
   validationSpy: ValidationSpy;
+  authenticationSpy: AuthenticationSpy;
 };
 
 const makeLoginFactory = (errorMessage = ""): MakeLoginFactoryReturn => {
   const validationSpy = new ValidationSpy();
+  const authenticationSpy = new AuthenticationSpy();
   validationSpy.errorMessage = errorMessage;
-  render(<Login validation={validationSpy} />);
+  render(<Login validation={validationSpy} authentication={authenticationSpy} />);
 
-  return { validationSpy };
+  return { validationSpy, authenticationSpy };
 };
 
 describe("Login Component", () => {
@@ -112,5 +127,21 @@ describe("Login Component", () => {
     fireEvent.submit(submitButton);
     const spinner = screen.getByTestId("spinner");
     expect(spinner).toBeInTheDocument();
+  });
+
+  test("Should call Authentication with correct values", () => {
+    const { authenticationSpy } = makeLoginFactory();
+    const email = "anyEmail";
+    const password = "anyPassword";
+    const submitButton = screen.getByTestId("submit");
+    const passwordInput = screen.getByTestId("login-password");
+    const emailInput = screen.getByTestId("login-email");
+    fireEvent.input(emailInput, { target: { value: email } });
+    fireEvent.input(passwordInput, { target: { value: password } });
+    fireEvent.submit(submitButton);
+    expect(authenticationSpy.params).toEqual({
+      email,
+      password,
+    });
   });
 });
