@@ -5,6 +5,7 @@ import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components
 import { Authentication, AuthenticationParams } from "@domain/use-cases";
 
 import Styles from "./login.scss";
+import { Link } from "react-router-dom";
 
 type Props = {
   validation: Validation;
@@ -40,8 +41,6 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
 
   async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
-
-    console.log("Exec");
 
     try {
       if (isLoading || isFormInvalid) return;
@@ -91,7 +90,9 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
         <button data-testid="submit" disabled={isFormInvalid} className={Styles.submit} type="submit">
           Entrar
         </button>
-        <span className={Styles.link}>Criar conta</span>
+        <Link data-testid="link-to-signup" to="/signup" className={Styles.link}>
+          Criar conta
+        </Link>
         <FormStatus isLoading={isLoading} errorMessage={errorMessage} />
       </form>
 
