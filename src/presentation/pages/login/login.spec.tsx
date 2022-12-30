@@ -1,5 +1,6 @@
 import React from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import "jest-localstorage-mock";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
 import { Login } from "./login";
@@ -43,6 +44,9 @@ const simulateValidSubmit = (email = "", password = ""): void => {
 
 describe("Login Component", () => {
   afterEach(cleanup);
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   test("Should not render spinner and error on initial state", () => {
     makeLoginFactory();
@@ -142,5 +146,12 @@ describe("Login Component", () => {
     const form = screen.getByTestId("login-form");
     fireEvent.submit(form);
     expect(authenticationSpy.callsCount).toBe(0);
+  });
+
+  test("Should add accessToken to localStorage on success", async () => {
+    const { authenticationSpy } = makeLoginFactory();
+    simulateValidSubmit();
+    waitFor(() => screen.queryByTestId("login-form"));
+    expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
   });
 });
