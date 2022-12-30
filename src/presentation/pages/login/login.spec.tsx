@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
 import { Login } from "./login";
@@ -18,12 +18,13 @@ type LoginProps = {
 
 const setupRouterInTest = (loginProps: LoginProps) => {
   render(
-    <Routes>
-      <Route path="/" element={<Login {...loginProps} />} />
-
-      <Route path="/signup" element={<div data-testid="signup-page">Sign Up</div>} />
-    </Routes>,
-    { wrapper: BrowserRouter }
+    <MemoryRouter initialEntries={["/"]} initialIndex={0}>
+      <Routes>
+        <Route path="/" element={<Login {...loginProps} />} />
+        <Route path="/signup" element={<div data-testid="signup-page" />} />
+        <Route path="/home" element={<div data-testid="home-page" />} />
+      </Routes>
+    </MemoryRouter>
   );
 };
 
@@ -132,28 +133,31 @@ describe("Login Component", () => {
     expect(submitButton).toBeEnabled();
   });
 
-  test("Should show Spinner after onSubmit", () => {
+  test("Should show Spinner after onSubmit", async () => {
     makeLoginFactory();
     simulateValidSubmit();
+    await waitFor(() => screen.queryByTestId("login-form"));
     const spinner = screen.getByTestId("spinner");
     expect(spinner).toBeInTheDocument();
   });
 
-  test("Should call Authentication with correct values", () => {
+  test("Should call Authentication with correct values", async () => {
     const { authenticationSpy } = makeLoginFactory();
     const email = "anyEmail";
     const password = "anyPassword";
     simulateValidSubmit(email, password);
+    await waitFor(() => screen.queryByTestId("login-form"));
     expect(authenticationSpy.params).toEqual({
       email,
       password,
     });
   });
 
-  test("Should call Authentication only once", () => {
+  test("Should call Authentication only once", async () => {
     const { authenticationSpy } = makeLoginFactory();
     simulateValidSubmit();
     simulateValidSubmit();
+    await waitFor(() => screen.queryByTestId("login-form"));
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
@@ -168,15 +172,23 @@ describe("Login Component", () => {
   test("Should add accessToken to localStorage on success", async () => {
     const { authenticationSpy } = makeLoginFactory();
     simulateValidSubmit();
-    waitFor(() => screen.queryByTestId("login-form"));
+    await waitFor(() => screen.queryByTestId("login-form"));
     expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
   });
 
-  test("Should go to SignUp page on success", async () => {
+  test("Should go to SignUp page", () => {
     makeLoginFactory();
     const link = screen.getByTestId("link-to-signup");
     fireEvent.click(link);
-    const signUpDescription = screen.queryByTestId("signup-page");
-    expect(signUpDescription).toBeInTheDocument();
+    const signUpPage = screen.queryByTestId("signup-page");
+    expect(signUpPage).toBeInTheDocument();
+  });
+
+  test.skip("Should go to Home page if form was submitted correctly", async () => {
+    makeLoginFactory();
+    simulateValidSubmit();
+    await waitFor(() => screen.queryByTestId("login-form"));
+    const homePage = screen.queryByTestId("home-page");
+    expect(homePage).toBeInTheDocument();
   });
 });
