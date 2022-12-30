@@ -5,7 +5,7 @@ import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components
 import { Authentication, AuthenticationParams } from "@domain/use-cases";
 
 import Styles from "./login.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type Props = {
   validation: Validation;
@@ -13,6 +13,8 @@ type Props = {
 };
 
 export const Login: React.FC<Props> = ({ validation, authentication }) => {
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [inputs, setInputs] = useState<AuthenticationParams>({
@@ -47,6 +49,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
       setIsLoading(true);
       const account = await authentication.auth(inputs);
       localStorage.setItem("accessToken", account.accessToken);
+      navigate("/signup");
     } catch (error) {
       setIsLoading(false);
       setErrorMessage("error");
