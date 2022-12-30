@@ -41,10 +41,13 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
   async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
 
+    console.log("Exec");
+
     try {
       if (isLoading || isFormInvalid) return;
       setIsLoading(true);
-      await authentication.auth(inputs);
+      const account = await authentication.auth(inputs);
+      localStorage.setItem("accessToken", account.accessToken);
     } catch (error) {
       setIsLoading(false);
       setErrorMessage("error");
