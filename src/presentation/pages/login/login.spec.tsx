@@ -1,20 +1,37 @@
 import React from "react";
-import "jest-localstorage-mock";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-
 import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
 import { Login } from "./login";
+
+import "jest-localstorage-mock";
 
 type MakeLoginFactoryReturn = {
   validationSpy: ValidationSpy;
   authenticationSpy: AuthenticationSpy;
 };
 
+type LoginProps = {
+  validation: ValidationSpy;
+  authentication: AuthenticationSpy;
+};
+
+const setupRouterInTest = (loginProps: LoginProps) => {
+  render(
+    <Routes>
+      <Route path="/" element={<Login {...loginProps} />} />
+
+      <Route path="/signup" element={<div data-testid="signup-page">Sign Up</div>} />
+    </Routes>,
+    { wrapper: BrowserRouter }
+  );
+};
+
 const makeLoginFactory = (errorMessage = ""): MakeLoginFactoryReturn => {
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
   validationSpy.errorMessage = errorMessage;
-  render(<Login validation={validationSpy} authentication={authenticationSpy} />);
+  setupRouterInTest({ validation: validationSpy, authentication: authenticationSpy });
 
   return { validationSpy, authenticationSpy };
 };
@@ -153,5 +170,13 @@ describe("Login Component", () => {
     simulateValidSubmit();
     waitFor(() => screen.queryByTestId("login-form"));
     expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+  });
+
+  test("Should go to SignUp page on success", async () => {
+    makeLoginFactory();
+    const link = screen.getByTestId("link-to-signup");
+    fireEvent.click(link);
+    const signUpDescription = screen.queryByTestId("signup-page");
+    expect(signUpDescription).toBeInTheDocument();
   });
 });
