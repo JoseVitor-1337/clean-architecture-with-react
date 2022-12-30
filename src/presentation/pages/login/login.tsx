@@ -13,7 +13,7 @@ type Props = {
 
 export const Login: React.FC<Props> = ({ validation, authentication }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage] = useState<string | undefined>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [inputs, setInputs] = useState<AuthenticationParams>({
     email: "",
     password: "",
@@ -40,12 +40,14 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
 
   async function handleSubmit(event: React.FormEvent): Promise<void> {
     event.preventDefault();
-    if (isLoading || isFormInvalid) return;
-    setIsLoading(true);
+
     try {
+      if (isLoading || isFormInvalid) return;
+      setIsLoading(true);
       await authentication.auth(inputs);
     } catch (error) {
-      console.log("Error", error);
+      setIsLoading(false);
+      setErrorMessage("error");
     }
   }
 

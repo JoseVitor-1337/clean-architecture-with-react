@@ -10,6 +10,11 @@ export class AuthenticationSpy implements Authentication {
   auth(params: AuthenticationParams): Promise<AccountModel> {
     this.callsCount++;
     this.params = params;
-    throw Promise.resolve(this.account);
+
+    try {
+      return Promise.resolve(this.account);
+    } catch (error) {
+      console.log("Error", error);
+    }
   }
 }
