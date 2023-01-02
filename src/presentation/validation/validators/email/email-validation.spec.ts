@@ -3,7 +3,7 @@ import { EmailValidation } from "./email-validation";
 
 const makeSut = (): EmailValidation => new EmailValidation("email");
 
-describe("Email Validation", () => {
+describe("EmailValidation", () => {
   test("Should return error if email is invalid", () => {
     const sut = makeSut();
     const error = sut.validate("vitor@");
