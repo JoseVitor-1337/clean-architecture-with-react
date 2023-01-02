@@ -16,11 +16,12 @@ const makeSut = (field: string): SutReturns => {
 describe("ValidationComposite", () => {
   test("Should return error is any validation fails", () => {
     const field = "anyField";
+    const firstError = "first error";
     const { sut, fieldValidationSpys } = makeSut(field);
-    fieldValidationSpys[0].error = new Error("first error");
+    fieldValidationSpys[0].error = new Error(firstError);
     fieldValidationSpys[1].error = new Error("second error");
     const error = sut.validate(field, "Any value");
-    expect(error).toBe("first error");
+    expect(error).toBe(firstError);
   });
 
   test("Should return error is any validation fails", () => {
