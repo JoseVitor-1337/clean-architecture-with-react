@@ -47,7 +47,7 @@ const populatePasswordField = (password = ""): void => {
   fireEvent.input(passwordInput, { target: { value: password } });
 };
 
-const simulataFormStatusForField = (fieldName: string, validationError?: string): void => {
+const testFormStatusForField = (fieldName: string, validationError?: string): void => {
   const fieldStatus = screen.getByTestId(fieldName);
   expect(fieldStatus.title).toBe(validationError || "Tudo certo!");
   expect(fieldStatus).toHaveTextContent(validationError ? "🔴" : "🟢");
@@ -58,6 +58,20 @@ const simulateValidSubmit = (email = "", password = ""): void => {
   populatePasswordField(password);
   const submitButton = screen.getByTestId("submit");
   fireEvent.submit(submitButton);
+};
+
+const testElementIsInTheDocument = (dataTestId: string) => {
+  const element = screen.queryByTestId(dataTestId);
+  expect(element).toBeInTheDocument();
+};
+
+const testButtonIsEnabled = (dataTestId: string, toBeDisabled: boolean) => {
+  const button = screen.queryByTestId(dataTestId);
+  if (toBeDisabled) {
+    expect(button).toBeDisabled();
+  } else {
+    expect(button).toBeEnabled();
+  }
 };
 
 describe("Login Component", () => {
@@ -74,8 +88,7 @@ describe("Login Component", () => {
 
   test("Should submit button is disable on initial state", () => {
     makeLoginFactory("Campo obrigatório");
-    const submitButton = screen.getByTestId("submit");
-    expect(submitButton).toBeDisabled();
+    testButtonIsEnabled("submit", true);
   });
 
   test("Should email and password inputs start with error spans on initial state", () => {
@@ -103,42 +116,40 @@ describe("Login Component", () => {
     const { validationSpy } = makeLoginFactory();
     validationSpy.errorMessage = "anyError";
     populateEmailField("anyEmail");
-    simulataFormStatusForField("login-email-status", validationSpy.errorMessage);
+    testFormStatusForField("login-email-status", validationSpy.errorMessage);
   });
 
   test("Should show password error on title if validaion fails", () => {
     const { validationSpy } = makeLoginFactory();
     validationSpy.errorMessage = "anyError";
     populatePasswordField("anyPassword");
-    simulataFormStatusForField("login-password-status", validationSpy.errorMessage);
+    testFormStatusForField("login-password-status", validationSpy.errorMessage);
   });
 
   test("Should show valid email state if Validation succeeds", () => {
     makeLoginFactory();
     populateEmailField("anyEmail");
-    simulataFormStatusForField("login-email-status");
+    testFormStatusForField("login-email-status");
   });
 
   test("Should show valid password state if Validation succeeds", () => {
     makeLoginFactory();
     populatePasswordField("anyPassword");
-    simulataFormStatusForField("login-password-status");
+    testFormStatusForField("login-password-status");
   });
 
   test("Should enable submit button if form is valid", () => {
     makeLoginFactory();
-    const submitButton = screen.getByTestId("submit");
     populateEmailField("anyEmail");
     populatePasswordField("anyPassword");
-    expect(submitButton).toBeEnabled();
+    testButtonIsEnabled("submit", false);
   });
 
   test("Should show Spinner after onSubmit", async () => {
     makeLoginFactory();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
-    const spinner = screen.getByTestId("spinner");
-    expect(spinner).toBeInTheDocument();
+    testElementIsInTheDocument("spinner");
   });
 
   test("Should call Authentication with correct values", async () => {
@@ -180,15 +191,13 @@ describe("Login Component", () => {
     makeLoginFactory();
     const link = screen.getByTestId("link-to-signup");
     fireEvent.click(link);
-    const signUpPage = screen.queryByTestId("signup-page");
-    expect(signUpPage).toBeInTheDocument();
+    testElementIsInTheDocument("signup-page");
   });
 
   test.skip("Should go to Home page if form was submitted correctly", async () => {
     makeLoginFactory();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
-    const homePage = screen.queryByTestId("home-page");
-    expect(homePage).toBeInTheDocument();
+    testElementIsInTheDocument("home-page");
   });
 });
