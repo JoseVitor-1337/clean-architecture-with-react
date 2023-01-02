@@ -7,7 +7,6 @@ type SutReturn = {
 
 const makeSut = (): SutReturn => {
   const sut = new RequiredFieldValidation("email");
-
   return { sut };
 };
 
