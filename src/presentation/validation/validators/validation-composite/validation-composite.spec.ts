@@ -22,4 +22,11 @@ describe("ValidationComposite", () => {
     const error = sut.validate(field, "Any value");
     expect(error).toBe("first error");
   });
+
+  test("Should return error is any validation fails", () => {
+    const field = "anyField";
+    const { sut } = makeSut(field);
+    const error = sut.validate(field, "Any value");
+    expect(error).toBeFalsy();
+  });
 });
