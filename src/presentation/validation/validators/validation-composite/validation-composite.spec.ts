@@ -1,5 +1,5 @@
-import { FieldValidationSpy } from "../test/mock-field-validation";
-import { ValidationComposite } from "./validation-composite";
+import { FieldValidationSpy } from "@presentation/validation/test";
+import { ValidationComposite } from "@presentation/validation/validators";
 
 type SutReturns = {
   sut: ValidationComposite;

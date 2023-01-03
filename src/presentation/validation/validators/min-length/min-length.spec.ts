@@ -1,5 +1,5 @@
 import { InvalidFieldError } from "@presentation/validation/errors";
-import { MinLengthValidation } from "./min-length";
+import { MinLengthValidation } from "@presentation/validation/validators";
 
 const makeSut = (): MinLengthValidation => new MinLengthValidation("password", 5);
 

@@ -1,5 +1,5 @@
 import { InvalidFieldError } from "@presentation/validation/errors";
-import { EmailValidation } from "./email-validation";
+import { EmailValidation } from "@presentation/validation/validators";
 
 const makeSut = (): EmailValidation => new EmailValidation("email");
 
