@@ -10,11 +10,11 @@ export const Input: React.FC<Props> = ({ title, onChange, ...props }) => {
   const testId = props["data-testid"];
 
   function getTitle(): string {
-    return title !== "" ? title : "Tudo certo!";
+    return title ? title : "Tudo certo!";
   }
 
   function getStatus(): string {
-    return title !== "" ? "🔴" : "🟢";
+    return title ? "🔴" : "🟢";
   }
 
   return (
