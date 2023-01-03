@@ -8,7 +8,7 @@ type SutReturns = {
 
 const makeSut = (field: string): SutReturns => {
   const fieldValidationSpys = [new FieldValidationSpy(field), new FieldValidationSpy(field)];
-  const sut = new ValidationComposite(fieldValidationSpys);
+  const sut = ValidationComposite.build(fieldValidationSpys);
 
   return { sut, fieldValidationSpys };
 };
