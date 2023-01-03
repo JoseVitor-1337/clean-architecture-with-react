@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
-import { Login } from "./login";
+import { Login } from "@presentation/pages/login/login";
 
 import "jest-localstorage-mock";
 

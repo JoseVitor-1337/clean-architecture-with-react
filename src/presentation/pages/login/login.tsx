@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Validation } from "@presentation/protocols/validation";
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
 import { Authentication, AuthenticationParams } from "@domain/use-cases";
 
 import Styles from "./login.scss";
-import { Link, useNavigate } from "react-router-dom";
 
 type Props = {
   validation: Validation;
