@@ -27,7 +27,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
   });
 
   const isFormInvalid = useMemo(() => {
-    return inputErrors.email !== "" || inputErrors.password !== "";
+    return !(!inputErrors.email && !inputErrors.password);
   }, [inputErrors]);
 
   function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
