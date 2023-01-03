@@ -1,7 +1,8 @@
 {
   "name": "clean-architecture-with-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "React Application, Clean Architecture with Typescript",
+  "author": "José Vitor",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open",
@@ -16,7 +17,6 @@
     "url": "git+https://github.com/JoseVitor-1337/clean-architecture-with-react.git"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JoseVitor-1337/clean-architecture-with-react/issues"
