@@ -14,7 +14,7 @@ module.exports = {
     alias: {
       "@data": path.join(__dirname, "src", "data"),
       "@domain": path.join(__dirname, "src", "domain"),
-      "@infra": path.join(__dirname, "src", "ingra"),
+      "@infra": path.join(__dirname, "src", "infra"),
       "@main": path.join(__dirname, "src", "main"),
       "@presentation": path.join(__dirname, "src", "presentation"),
       "@assets": path.join(__dirname, "src", "assets"),
