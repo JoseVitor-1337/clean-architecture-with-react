@@ -1,16 +1,18 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "@presentation/styles/global.scss";
 
-import { Login } from "@presentation/pages";
+type Props = {
+  makeLogin: () => ReactElement;
+};
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Login />,
-  },
-]);
+export const Router: React.FC<Props> = ({ makeLogin }) => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: makeLogin(),
+    },
+  ]);
 
-export const Router: React.FC = () => {
   return <RouterProvider router={router} />;
 };

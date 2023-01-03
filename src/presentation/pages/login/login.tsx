@@ -52,7 +52,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
       navigate("/signup");
     } catch (error) {
       setIsLoading(false);
-      setErrorMessage("error");
+      setErrorMessage("Erro na requisição");
     }
   }
 

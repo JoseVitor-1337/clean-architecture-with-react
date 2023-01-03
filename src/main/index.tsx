@@ -3,4 +3,6 @@ import ReactDOM from "react-dom";
 
 import { Router } from "@presentation/router/router";
 
-ReactDOM.render(<Router />, document.getElementById("main"));
+import { makeLogin } from "@main/factories/page/login/login-factory";
+
+ReactDOM.render(<Router makeLogin={makeLogin} />, document.getElementById("main"));
