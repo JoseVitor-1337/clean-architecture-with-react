@@ -1,6 +1,6 @@
 {
   "name": "clean-architecture-with-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Application, Clean Architecture with Typescript",
   "author": "José Vitor",
   "main": "index.js",
