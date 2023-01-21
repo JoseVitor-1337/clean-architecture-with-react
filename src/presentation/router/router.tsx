@@ -12,6 +12,10 @@ export const Router: React.FC<Props> = ({ makeLogin }) => {
       path: "/",
       element: makeLogin(),
     },
+    {
+      path: "/signup",
+      element: <h1>Sign up</h1>,
+    },
   ]);
 
   return <RouterProvider router={router} />;
