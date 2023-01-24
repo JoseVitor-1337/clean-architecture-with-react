@@ -1,22 +1,22 @@
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { AuthenticationSpy, ValidationSpy } from "@presentation/test";
+import { AuthenticationSpy, ValidationSpy, SaveAccessTokenMock } from "@presentation/test";
 import { Login } from "@presentation/pages/login/login";
 
-import "jest-localstorage-mock";
-
-type MakeLoginFactoryReturn = {
+type SutTypes = {
   validationSpy: ValidationSpy;
   authenticationSpy: AuthenticationSpy;
+  saveAccessTokenMock: SaveAccessTokenMock;
 };
 
 type LoginProps = {
   validation: ValidationSpy;
   authentication: AuthenticationSpy;
+  saveAccessToken: SaveAccessTokenMock;
 };
 
-const setupRouterInTest = (loginProps: LoginProps) => {
+const setupRouterInTest = async (loginProps: LoginProps) => {
   render(
     <MemoryRouter initialEntries={["/"]} initialIndex={0}>
       <Routes>
@@ -28,13 +28,15 @@ const setupRouterInTest = (loginProps: LoginProps) => {
   );
 };
 
-const makeLoginFactory = (errorMessage = ""): MakeLoginFactoryReturn => {
+const makeLoginFactory = async (errorMessage = ""): Promise<SutTypes> => {
+  const saveAccessTokenMock = new SaveAccessTokenMock();
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
   validationSpy.errorMessage = errorMessage;
-  setupRouterInTest({ validation: validationSpy, authentication: authenticationSpy });
 
-  return { validationSpy, authenticationSpy };
+  await setupRouterInTest({ validation: validationSpy, authentication: authenticationSpy, saveAccessToken: saveAccessTokenMock });
+
+  return { validationSpy, authenticationSpy, saveAccessTokenMock };
 };
 
 const populateEmailField = (email = ""): void => {
@@ -76,84 +78,81 @@ const testButtonIsEnabled = (dataTestId: string, toBeDisabled: boolean) => {
 
 describe("Login Component", () => {
   afterEach(cleanup);
-  beforeEach(() => {
-    localStorage.clear();
-  });
 
-  test("Should not render spinner and error on initial state", () => {
-    makeLoginFactory();
+  test("Should not render spinner and error on initial state", async () => {
+    await makeLoginFactory();
     const errorWrap = screen.getByTestId("error-wrap");
     expect(errorWrap.childElementCount).toBe(0);
   });
 
-  test("Should submit button is disable on initial state", () => {
-    makeLoginFactory("Campo obrigatório");
+  test("Should submit button is disable on initial state", async () => {
+    await makeLoginFactory("Campo obrigatório");
     testButtonIsEnabled("submit", true);
   });
 
-  test("Should email and password inputs start with error spans on initial state", () => {
-    const { validationSpy } = makeLoginFactory("Campo obrigatório");
+  test("Should email and password inputs start with error spans on initial state", async () => {
+    const { validationSpy } = await makeLoginFactory("Campo obrigatório");
     const inputErrorSpans = screen.queryAllByTitle(validationSpy.errorMessage);
     expect(inputErrorSpans.length).toBe(2);
     inputErrorSpans.forEach((errorSpan) => expect(errorSpan).toHaveTextContent("🔴"));
   });
 
-  test("Should call Validation with correct email", () => {
-    const { validationSpy } = makeLoginFactory();
+  test("Should call Validation with correct email", async () => {
+    const { validationSpy } = await makeLoginFactory();
     populateEmailField("anyEmail");
     expect(validationSpy.fieldName).toEqual("email");
     expect(validationSpy.fieldValue).toEqual("anyEmail");
   });
 
-  test("Should call Validation with correct password", () => {
-    const { validationSpy } = makeLoginFactory();
+  test("Should call Validation with correct password", async () => {
+    const { validationSpy } = await makeLoginFactory();
     populatePasswordField("anyPassword");
     expect(validationSpy.fieldName).toEqual("password");
     expect(validationSpy.fieldValue).toEqual("anyPassword");
   });
 
-  test("Should show email error on title if validaion fails", () => {
-    const { validationSpy } = makeLoginFactory();
+  test("Should show email error on title if validaion fails", async () => {
+    const { validationSpy } = await makeLoginFactory();
     validationSpy.errorMessage = "anyError";
     populateEmailField("anyEmail");
     testFormStatusForField("login-email-status", validationSpy.errorMessage);
   });
 
-  test("Should show password error on title if validaion fails", () => {
-    const { validationSpy } = makeLoginFactory();
+  test("Should show password error on title if validaion fails", async () => {
+    const { validationSpy } = await makeLoginFactory();
     validationSpy.errorMessage = "anyError";
     populatePasswordField("anyPassword");
     testFormStatusForField("login-password-status", validationSpy.errorMessage);
   });
 
-  test("Should show valid email state if Validation succeeds", () => {
-    makeLoginFactory();
+  test("Should show valid email state if Validation succeeds", async () => {
+    await makeLoginFactory();
     populateEmailField("anyEmail");
     testFormStatusForField("login-email-status");
   });
 
-  test("Should show valid password state if Validation succeeds", () => {
-    makeLoginFactory();
+  test("Should show valid password state if Validation succeeds", async () => {
+    await makeLoginFactory();
     populatePasswordField("anyPassword");
     testFormStatusForField("login-password-status");
   });
 
-  test("Should enable submit button if form is valid", () => {
-    makeLoginFactory();
+  test("Should enable submit button if form is valid", async () => {
+    await makeLoginFactory();
     populateEmailField("anyEmail");
     populatePasswordField("anyPassword");
     testButtonIsEnabled("submit", false);
   });
 
   test("Should show Spinner after onSubmit", async () => {
-    makeLoginFactory();
+    await makeLoginFactory();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
     testElementIsInTheDocument("spinner");
   });
 
   test("Should call Authentication with correct values", async () => {
-    const { authenticationSpy } = makeLoginFactory();
+    const { authenticationSpy } = await makeLoginFactory();
     const email = "anyEmail";
     const password = "anyPassword";
     simulateValidSubmit(email, password);
@@ -165,37 +164,37 @@ describe("Login Component", () => {
   });
 
   test("Should call Authentication only once", async () => {
-    const { authenticationSpy } = makeLoginFactory();
+    const { authenticationSpy } = await makeLoginFactory();
     simulateValidSubmit();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
-  test("Should not call Authentication if form is valid", () => {
-    const { authenticationSpy } = makeLoginFactory("Error");
+  test("Should not call Authentication if form is valid", async () => {
+    const { authenticationSpy } = await makeLoginFactory("Error");
     populateEmailField("anyEmail");
     const form = screen.getByTestId("login-form");
     fireEvent.submit(form);
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
-  test("Should add accessToken to localStorage on success", async () => {
-    const { authenticationSpy } = makeLoginFactory();
+  test("Should call SaveAccessToken on success", async () => {
+    const { authenticationSpy, saveAccessTokenMock } = await makeLoginFactory();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
-    expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+    expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
   });
 
-  test("Should go to SignUp page", () => {
-    makeLoginFactory();
+  test("Should go to SignUp page", async () => {
+    await makeLoginFactory();
     const link = screen.getByTestId("link-to-signup");
     fireEvent.click(link);
     testElementIsInTheDocument("signup-page");
   });
 
   test.skip("Should go to Home page if form was submitted correctly", async () => {
-    makeLoginFactory();
+    await makeLoginFactory();
     simulateValidSubmit();
     await waitFor(() => screen.queryByTestId("login-form"));
     testElementIsInTheDocument("home-page");
