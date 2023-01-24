@@ -3,16 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Validation } from "@presentation/protocols/validation";
 import { Input, Footer, FormStatus, LoginHeader } from "@presentation/components";
-import { Authentication, AuthenticationParams } from "@domain/use-cases";
+import { Authentication, AuthenticationParams, SaveAccessToken } from "@domain/use-cases";
 
 import Styles from "./login.scss";
 
 type Props = {
   validation: Validation;
   authentication: Authentication;
+  saveAccessToken: SaveAccessToken;
 };
 
-export const Login: React.FC<Props> = ({ validation, authentication }) => {
+export const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }) => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,7 +49,7 @@ export const Login: React.FC<Props> = ({ validation, authentication }) => {
       if (isLoading || isFormInvalid) return;
       setIsLoading(true);
       const account = await authentication.auth(inputs);
-      localStorage.setItem("accessToken", account.accessToken);
+      await saveAccessToken.save(account.accessToken);
       navigate("/signup");
     } catch (error) {
       setIsLoading(false);
