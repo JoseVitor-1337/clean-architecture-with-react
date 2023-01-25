@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { AuthenticationSpy, ValidationSpy, SaveAccessTokenMock } from "@presentation/test";
 import { Login } from "@presentation/pages/login/login";
+import { InvalidCredentialsError } from "@domain/erros";
 
 type SutTypes = {
   validationSpy: ValidationSpy;
@@ -177,6 +178,22 @@ describe("Login Component", () => {
     const form = screen.getByTestId("login-form");
     fireEvent.submit(form);
     expect(authenticationSpy.callsCount).toBe(0);
+  });
+
+  test("Should call SaveAccessToken on success", async () => {
+    const { authenticationSpy, saveAccessTokenMock } = await makeLoginFactory();
+    simulateValidSubmit();
+    await waitFor(() => screen.queryByTestId("login-form"));
+    expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
+  });
+
+  test("Should present error if SaveAccessToken fails", async () => {
+    const { saveAccessTokenMock } = await makeLoginFactory();
+    const error = new InvalidCredentialsError();
+    jest.spyOn(saveAccessTokenMock, "save").mockReturnValueOnce(Promise.reject(error));
+    simulateValidSubmit();
+    await waitFor(() => screen.queryByTestId("login-form"));
+    testElementIsInTheDocument("error-wrap");
   });
 
   test("Should call SaveAccessToken on success", async () => {
